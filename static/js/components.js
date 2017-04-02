@@ -1,6 +1,6 @@
 // React components to render the page.
 console.log(EtherWordChain);
-var theApp = new EtherWordChain('0xbF27948e03cBa66f4f2616aAb25567845C465953');
+var theApp = new EtherWordChain('0x1229d72d7df79b7d042f828caaaa6526434b30e2');
 window.theApp = theApp;
 
 var asyncLoop = function(o) {
@@ -20,7 +20,7 @@ var LastWord = React.createClass({
         return {
             lastWord: {
                 word: 'genesis',
-                description: 'ethwordchain.com - word building game on the ethereum blockchain!',
+                description: 'ethwordchain.com - first word building game on the blockchain!',
             }
         }
     },
