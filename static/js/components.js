@@ -110,8 +110,8 @@ var RecentlyAdded = React.createClass({
                 <thead>
                   <tr>
                     <th className="mdl-data-table__cell--non-numeric">Word</th>
-                    <th className="mdl-data-table__cell--non-numeric">Description</th>
-                    <th>Date added</th>
+                    <th className="mdl-data-table__cell--non-numeric">Comments</th>
+                    <th>Added on</th>
                   </tr>
                 </thead>
                 <tbody>{rows}</tbody>
