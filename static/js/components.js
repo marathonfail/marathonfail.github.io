@@ -75,7 +75,7 @@ var EthWord = React.createClass({
         return (
             <tr>
                    <td className="mdl-data-table__cell--non-numeric">{this.state.word}</td>
-                   <td>{this.state.description}</td>
+                   <td className="mdl-data-table__cell--non-numeric">{this.state.description == "" ? "-" : this.state.description}</td>
                    <td>{this.getDate(this.state.date)}</td>
             </tr>
         );
