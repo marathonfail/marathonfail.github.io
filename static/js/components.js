@@ -128,7 +128,8 @@ var GameRules = React.createClass({
 
 var onWordUpdated = function(word) {
     var startChar = word.word.charAt(word.word.length - 1);
-    $("#label_for_input").text("Enter a word starting with '" + startChar + "'");
+    $("#label_for_input_home_page").text("Enter a word starting with '" + startChar + "'");
+    $("#label_for_input_word").text("Enter a word starting with '" + startChar + "'");
     console.log(word);
 }
 
