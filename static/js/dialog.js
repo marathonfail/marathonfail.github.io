@@ -42,13 +42,17 @@ $(document).ready(function() {
                 if (word == '') {
                     $("#success_err_msg").html("<p><font color='red'>Please enter a word!</font></p>");
                 } else {
-                    theApp.addWord(word, description, function(err, txId) {
-                        if (err) {
-                            $("#success_err_msg").html("<p><font color='red'>There was an error processing your request</font></p>");
-                        } else {
-                            $("#success_err_msg").html('<font color="green"><a href="https://etherscan.io/tx/'+ txId + '" target="_blank"' + '>Submitted Transaction</a></font>');
-                        }
-                    });
+                    if (metaMaskEnabled) {
+                        theApp.addWord(word, description, function(err, txId) {
+                            if (err) {
+                                $("#success_err_msg").html("<p><font color='red'>There was an error processing your request</font></p>");
+                            } else {
+                                $("#success_err_msg").html('<font color="green"><a href="https://etherscan.io/tx/'+ txId + '" target="_blank"' + '>Submitted Transaction</a></font>');
+                            }
+                        });
+                    } else {
+                        $("#success_err_msg").html("<p><font color='red'>Install MetaMask chrome extension to continue!</font></p>");
+                    }
                 }
             });
             $("#add_to_chain").click(function(){

@@ -24,7 +24,7 @@ if (typeof web3 !== 'undefined') {
 } else {
   //console.log(web3);
   // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
-  var tWeb3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+  var tWeb3 = new Web3(new Web3.providers.HttpProvider("http://88.99.173.109:8545"));
   window.metaMaskEnabled = false;
   window.web3 = tWeb3;
   console.log("MetaMask is not available!!");
