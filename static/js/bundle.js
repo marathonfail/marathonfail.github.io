@@ -19,15 +19,18 @@ var Web3 = require('web3');
 if (typeof web3 !== 'undefined') {
   // Web3 has been injected by the browser (Mist/MetaMask)
   console.log("Using metamask!!");
-  web3 = new Web3(web3.currentProvider);
+  var readWeb3 = new Web3(new Web3.providers.HttpProvider("http://88.99.173.109:8545"));
+  var writeWeb3 = new Web3(web3.currentProvider);
   window.metaMaskEnabled = true;
-  window.web3 = web3;
+  window.writeWeb3 = writeWeb3;
+  window.readWeb3 = readWeb3;
 } else {
   //console.log(web3);
   // fallback - use your fallback strategy (local node / hosted node + in-dapp id mgmt / fail)
   var tWeb3 = new Web3(new Web3.providers.HttpProvider("http://88.99.173.109:8545"));
   window.metaMaskEnabled = false;
-  window.web3 = tWeb3;
+  window.readWeb3 = tWeb3;
+  window.writeWeb3 = tWeb3;
   console.log("MetaMask is not available!!");
 }
 var EtherWordChain = require('./wordchain.js');
@@ -319,8 +322,9 @@ var WordBuildingABI = [{"constant":false,"inputs":[{"name":"fees","type":"uint25
 
 var EtherWordChain = function(ct_address) {
     this.address = ct_address;
-    var ctnt = web3.eth.contract(WordBuildingABI).at(ct_address);
+    var ctnt = readWeb3.eth.contract(WordBuildingABI).at(ct_address);
     this.contract = ctnt;
+    this.writeContract = writeWeb3.eth.contract(WordBuildingABI).at(ct_address);
     this.totalWords = 0;
     this.lastWord = null;
     this.feeToAdd = null;
@@ -413,7 +417,7 @@ EtherWordChain.prototype.addWord = function(word, description, callback) {
     word = word.toLowerCase();
     console.log(word, description, web3.eth.coinbase);
     try {
-        this.contract.nextWord.sendTransaction(word, description, {from: web3.eth.coinbase, value: this.feeToAdd}, callback);
+        this.writeContract.nextWord.sendTransaction(word, description, {from: web3.eth.coinbase, value: this.feeToAdd}, callback);
     } catch (ex) {
         console.log(ex);
         callback("Error processing");
