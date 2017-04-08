@@ -12,3 +12,19 @@
 .mdl-card {
     background: rgb(0, 0, 0, 0.54);
 }
+
+.triangle-up {
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 16px solid #ff4081;
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+.center-align {
+    text-align: center;
+}
