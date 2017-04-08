@@ -100,21 +100,21 @@ var TipComponent = React.createClass({
     },
 
     render: function() {
-        var rows = [];
+        var row;
         if (this.state.totalTippedTimes > 0) {
-            rows.push(
+            row = (
                 <span className="mdl-chip mdl-chip--contact">
                     <span className="mdl-chip__contact mdl-color--teal mdl-color-text--white">{this.state.totalTippedTimes}</span>
                     <span className="mdl-chip__text">{" " + this.getTotalTippedInEth() + " ETH"}</span>
                 </span>
             );
         } else {
-            rows.push(<div className="triangle-up"></div>);
+            row = (<div className="triangle-up"></div>);
         }
 
         return (
             <td className="mdl-data-table__cell--non-numeric clickable" onClick={this.showDialog}>
-                {rows}
+                {row}
             </td>
         );
     }
