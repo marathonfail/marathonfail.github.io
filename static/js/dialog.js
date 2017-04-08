@@ -33,6 +33,7 @@ $(document).ready(function() {
                 $("#success_err_msg").html("");
                 inputDialog.showModal();
             });
+
             $("#input_dialog_close").click(function() {
                 inputDialog.close();
             });
@@ -45,6 +46,7 @@ $(document).ready(function() {
                     if (metaMaskEnabled) {
                         theApp.addWord(word, description, function(err, txId) {
                             if (err) {
+                                console.log(err);
                                 $("#success_err_msg").html("<p><font color='red'>There was an error processing your request</font></p>");
                             } else {
                                 $("#success_err_msg").html('<font color="green"><a href="https://etherscan.io/tx/'+ txId + '" target="_blank"' + '>Submitted Transaction</a></font>');

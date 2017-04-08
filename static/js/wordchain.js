@@ -9,12 +9,14 @@ var EtherWordChain = function(ct_address) {
     var ctnt = readWeb3.eth.contract(WordBuildingABI).at(ct_address);
     this.contract = ctnt;
     this.writeContract = writeWeb3.eth.contract(WordBuildingABI).at(ct_address);
+    console.log(this.writeContract);
     this.totalWords = 0;
     this.lastWord = null;
     this.feeToAdd = null;
     this.feeToNegativeVote = null;
     this.feeToTip = null,
     this.feeToUpdateLink = null,
+    this.ONE_ETH = new BigNumber("1000000000000000000");
     this.init();
 }
 
@@ -89,7 +91,17 @@ EtherWordChain.prototype.getWordAt = function(index, callback) {
         if (error) {
             callback(error);
         } else {
-            callback(error, index, new EtherWord(wordAtIndex[0], wordAtIndex[1], wordAtIndex[2], wordAtIndex[3], wordAtIndex[4]));
+            this.contract.getTotalTipped(index, function(err, totalTippedRes) {
+                if (err) {
+                    callback(err);
+                } else {
+                    var ethword = new EtherWord(wordAtIndex[0], wordAtIndex[1], wordAtIndex[2], wordAtIndex[3], wordAtIndex[4]);
+                    ethword.totalTipped = totalTippedRes[0];
+                    ethword.totalTippedTimes = totalTippedRes[1];
+                    callback(error, index, ethword);
+                }
+            })
+
         }
     }.bind(this));
 }
@@ -99,12 +111,26 @@ EtherWordChain.prototype.addWord = function(word, description, callback) {
         description = "";
     }
     word = word.toLowerCase();
-    console.log(word, description, web3.eth.coinbase);
+    console.log(word, description, writeWeb3.eth.coinbase);
     try {
-        this.writeContract.nextWord.sendTransaction(word, description, {from: web3.eth.coinbase, value: this.feeToAdd}, callback);
+        this.writeContract.nextWord.sendTransaction(word, description, {from: writeWeb3.eth.coinbase, value: this.feeToAdd}, callback);
     } catch (ex) {
         console.log(ex);
         callback("Error processing");
+    }
+}
+
+EtherWordChain.prototype.sendTip = function(index, valueInEth, callback) {
+    console.log(valueInEth, index);
+    var ethVal = new BigNumber(valueInEth);
+    var oneEth = new BigNumber("1000000000000000000");
+    var valueInWei = ethVal.times(oneEth);
+    console.log(valueInWei);
+    try {
+        this.writeContract.tip.sendTransaction(index, {from: writeWeb3.eth.coinbase, value: valueInWei}, callback);
+    } catch (ex) {
+        console.log(ex);
+        callback("Error processing send tip request");
     }
 }
 

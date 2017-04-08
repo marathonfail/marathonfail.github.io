@@ -44,6 +44,82 @@ var LastWord = React.createClass({
     }
 });
 
+$(document).ready(function() {
+            var tipDialog = document.querySelector("#tip_dialog");
+            window.tipDialog = tipDialog;
+            if (!tipDialog.showModal) {
+                dialogPolyfill.registerDialog(tipDialog);
+            }
+            var tipInputValue = $("#tip_input_value");
+            $("#tip_input_value").on('input', function(){
+                var val = $("#tip_input_value").val();
+                $("#tip_label").text(val + " ETH");
+            });
+            $("#send_tip_button").click(function(){
+                var tipEth = $("#tip_input_value").val();
+                theApp.sendTip($("#tip_for_index").val(), tipEth, function(err, txId) {
+                    if (err) {
+                        $("#success_err_msg_tip").html("<p><font color='red'>There was an error processing your request</font></p>");
+                    } else {
+                        $("#success_err_msg_tip").html('<font color="green"><a href="https://etherscan.io/tx/'+ txId + '" target="_blank"' + '>Submitted Transaction</a></font>');
+                    }
+                });
+            });
+
+            $("#tip_dialog_close").click(function(){
+                tipDialog.close();
+            });
+     });
+
+var TipComponent = React.createClass({
+
+    getInitialState: function() {
+        return {
+            totalTipped: new BigNumber(0),
+            totalTippedTimes: 0
+        };
+    },
+
+    getTotalTippedInEth: function() {
+        var val = this.state.totalTipped.dividedBy(theApp.ONE_ETH);
+        console.log(val + " val");
+        return val.toNumber();
+    },
+
+    showDialog: function() {
+        $("#tip_label").text(" 1 ETH");
+        $("#tip_input_value").val(1);
+        $("#tip_for_index").val(this.props.index);
+        $("#tip_for_word").text(this.props.word);
+        $("#success_err_msg_tip").html("");
+        tipDialog.showModal();
+    },
+
+    componentWillReceiveProps: function(newProps) {
+        this.setState({totalTipped: newProps.ethword.totalTipped, totalTippedTimes: newProps.ethword.totalTippedTimes.toNumber()});
+    },
+
+    render: function() {
+        var rows = [];
+        if (this.state.totalTippedTimes > 0) {
+            rows.push(
+                <span className="mdl-chip mdl-chip--contact">
+                    <span className="mdl-chip__contact mdl-color--teal mdl-color-text--white">{this.state.totalTippedTimes}</span>
+                    <span className="mdl-chip__text">{" " + this.getTotalTippedInEth() + " ETH"}</span>
+                </span>
+            );
+        } else {
+            rows.push(<div className="triangle-up"></div>);
+        }
+
+        return (
+            <td className="mdl-data-table__cell--non-numeric clickable" onClick={this.showDialog}>
+                {rows}
+            </td>
+        );
+    }
+});
+
 var EthWord = React.createClass({
     getDate: function(date) {
         var thenDate = new Date(date * 1000);
@@ -63,17 +139,19 @@ var EthWord = React.createClass({
         return {
             word: "",
             description: "",
-            date: new Date()
+            date: new Date(),
+            ethword: null
         }
     },
     componentDidMount: function() {
         theApp.getWordAt(this.props.index, function(error, index, word){
-           this.setState({word: word.word, description: word.description, date: word.addedOn.toNumber()});
+           this.setState({word: word.word, description: word.description, date: word.addedOn.toNumber(), ethword: word});
         }.bind(this));
     },
     render: function() {
         return (
             <tr>
+                   <TipComponent index={this.props.index} word={this.state.word} ethword={this.state.ethword}/>
                    <td className="mdl-data-table__cell--non-numeric">{this.state.word}</td>
                    <td className="mdl-data-table__cell--non-numeric">{this.state.description == "" ? "-" : this.state.description}</td>
                    <td>{this.getDate(this.state.date)}</td>
@@ -109,6 +187,7 @@ var RecentlyAdded = React.createClass({
             <table className="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
                 <thead>
                   <tr>
+                    <th></th>
                     <th className="mdl-data-table__cell--non-numeric">Word</th>
                     <th className="mdl-data-table__cell--non-numeric">Comments</th>
                     <th>Added</th>
