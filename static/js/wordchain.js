@@ -6,8 +6,9 @@ var WordBuildingABI = [{"constant":false,"inputs":[{"name":"fees","type":"uint25
 
 var EtherWordChain = function(ct_address) {
     this.address = ct_address;
-    var ctnt = web3.eth.contract(WordBuildingABI).at(ct_address);
+    var ctnt = readWeb3.eth.contract(WordBuildingABI).at(ct_address);
     this.contract = ctnt;
+    this.writeContract = writeWeb3.eth.contract(WordBuildingABI).at(ct_address);
     this.totalWords = 0;
     this.lastWord = null;
     this.feeToAdd = null;
@@ -100,7 +101,7 @@ EtherWordChain.prototype.addWord = function(word, description, callback) {
     word = word.toLowerCase();
     console.log(word, description, web3.eth.coinbase);
     try {
-        this.contract.nextWord.sendTransaction(word, description, {from: web3.eth.coinbase, value: this.feeToAdd}, callback);
+        this.writeContract.nextWord.sendTransaction(word, description, {from: web3.eth.coinbase, value: this.feeToAdd}, callback);
     } catch (ex) {
         console.log(ex);
         callback("Error processing");
