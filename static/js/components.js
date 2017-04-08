@@ -1,6 +1,6 @@
 // React components to render the page.
 console.log(EtherWordChain);
-var theApp = new EtherWordChain('0x1229d72d7df79b7d042f828caaaa6526434b30e2');
+var theApp = new EtherWordChain('0x3a425eEe8d35DDCA0f6c25e787bb33EA301F0f08');
 window.theApp = theApp;
 
 var asyncLoop = function(o) {
