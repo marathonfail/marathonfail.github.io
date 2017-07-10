@@ -19,7 +19,8 @@ if (typeof web3 !== 'undefined') {
   // Web3 has been injected by the browser (Mist/MetaMask)
   console.log("Using metamask!!");
   var writeWeb3 = new Web3(web3.currentProvider);
-  var readWeb3 = new Web3(new Web3.providers.HttpProvider("http://88.99.173.109:8545"));
+  //var readWeb3 = new Web3(new Web3.providers.HttpProvider("http://88.99.173.109:8545"));
+  var readWeb3 = new Web3(web3.currentProvider); 
   window.metaMaskEnabled = true;
   window.writeWeb3 = writeWeb3;
   window.readWeb3 = readWeb3;
